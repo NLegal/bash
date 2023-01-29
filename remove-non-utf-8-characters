@@ -1,0 +1,48 @@
+Here’s an error we can expect on python:
+
+#### Truncated ####
+UnicodeDecodeError: 'utf-8' codec cannot decode byte 0xf1 in position 933: invalid continuation byte
+None
+
+JavaScript:
+
+#### Trunctated ####
+Uncaught SyntaxError: Unexpected identifier
+
+Eventually, let’s see the error in Perl:
+
+Malformed UTF-8 character (fatal)
+
+How to Find Non-UTF-8 Characters in a File
+We can easily find all non-UTF-8 characters in a file using grep. Assuming we’ve set up our locale to UTF-8.
+
+Let’s type in the following command in our terminal to print out all lines containing non-UTF-8 characters:
+
+grep -axv '.*' FILE
+Copy
+Here’s what each part of this command represents:
+
+-a, –text: Treats our FILE as text, hence preventing grep from aborting once it finds an invalid character.
+-x ‘.*’ (–line regexp): Matches a complete line containing any UTF-8 character.
+-v, –invert match: Inverts our output displaying lines not matched.
+FILE: Represents the file we want to check for invalid characters.
+
+How to Automatically Remove Non-UTF-8 Characters
+To automatically find and delete non-UTF-8 characters, we’re going to use the iconv command. It is used in Linux systems to convert text from one character encoding to another.
+
+Let’s look at how we can use this command and a combination of other flags to remove invalid characters:
+
+$ iconv -f utf-8 -t utf-8 -c FILE
+We can break down the command above to find out what each part is doing:
+
+-f: Represents the original file format. We’ve defined it as utf-8 in our example above
+-t: Represents the target file format that we want to convert to.
+-c: Skips any invalid sequences
+FILE: Represents the file we want to remove invalid characters from.
+
+Let’s use the test file we created above to remove all invalid characters and save the changes to a different file named “test_clean.txt”:
+
+$ iconv -f utf-8 -t utf-8 -c test.txt > test_clean.txt
+or
+
+$ iconv -f utf-8 -t utf-8 -c test.txt -o test_clean.txt
